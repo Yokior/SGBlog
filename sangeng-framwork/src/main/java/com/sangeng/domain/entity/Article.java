@@ -2,6 +2,7 @@ package com.sangeng.domain.entity;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Article {
-    
+    @TableId
     private Long id;
     //标题
     private String title;
