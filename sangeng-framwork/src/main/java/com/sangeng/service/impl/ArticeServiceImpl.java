@@ -6,10 +6,16 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.constants.SystemConstants;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Article;
+import com.sangeng.domain.entity.Category;
+import com.sangeng.domain.vo.ArticleListVo;
 import com.sangeng.domain.vo.HotArticleVo;
+import com.sangeng.domain.vo.PageVo;
 import com.sangeng.mapper.ArticleMapper;
 import com.sangeng.service.ArticleService;
+import com.sangeng.service.CategoryService;
 import com.sangeng.utils.BeanCopyUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +23,7 @@ import java.util.List;
 @Service
 public class ArticeServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService
 {
+
     @Override
     public ResponseResult hotArticleList()
     {
@@ -34,5 +41,31 @@ public class ArticeServiceImpl extends ServiceImpl<ArticleMapper, Article> imple
         List<HotArticleVo> hotArticleVos = BeanCopyUtils.copyBeanList(articles, HotArticleVo.class);
 
         return ResponseResult.okResult(hotArticleVos);
+    }
+
+    @Override
+    public ResponseResult articleList(Integer pageNum, Integer pageSize, Long categoryId)
+    {
+        // 条件查询
+        LambdaQueryWrapper<Article> lqw = new LambdaQueryWrapper<>();
+
+        // 如果有categoryId 分类排序
+        lqw.eq(categoryId != null && categoryId > 0,Article::getCategoryId,categoryId);
+        // 查询文章是已发布
+        lqw.eq(Article::getStatus,SystemConstants.ARTICLE_STATUS_NORMAL);
+        // 置顶文章
+        lqw.orderByDesc(Article::getIsTop);
+
+        // 分页查询
+        Page<Article> articlePage = new Page<>(pageNum,pageSize);
+        page(articlePage,lqw);
+
+        // 封装成vo
+        List<ArticleListVo> articleListVos = BeanCopyUtils.copyBeanList(articlePage.getRecords(), ArticleListVo.class);
+        // 补充数据 categoryName
+
+
+        PageVo pageVo = new PageVo(articleListVos, articlePage.getTotal());
+        return ResponseResult.okResult(pageVo);
     }
 }
