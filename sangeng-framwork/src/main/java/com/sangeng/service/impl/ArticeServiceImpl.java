@@ -16,13 +16,18 @@ import com.sangeng.service.CategoryService;
 import com.sangeng.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 @Service
 public class ArticeServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService
 {
+    @Lazy
+    @Autowired
+    private CategoryService categoryService;
 
     @Override
     public ResponseResult hotArticleList()
@@ -60,9 +65,18 @@ public class ArticeServiceImpl extends ServiceImpl<ArticleMapper, Article> imple
         Page<Article> articlePage = new Page<>(pageNum,pageSize);
         page(articlePage,lqw);
 
+        List<Article> articleList = articlePage.getRecords();
+        // 补充数据 categoryName
+        articleList.stream()
+                .forEach(article ->
+                {
+                    Category category = categoryService.getById(article.getCategoryId());
+                    article.setCategoryName(category.getName());
+                });
+
+
         // 封装成vo
         List<ArticleListVo> articleListVos = BeanCopyUtils.copyBeanList(articlePage.getRecords(), ArticleListVo.class);
-        // 补充数据 categoryName
 
 
         PageVo pageVo = new PageVo(articleListVos, articlePage.getTotal());
