@@ -7,6 +7,7 @@ import com.sangeng.constants.SystemConstants;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Article;
 import com.sangeng.domain.entity.Category;
+import com.sangeng.domain.vo.ArticleDetailVo;
 import com.sangeng.domain.vo.ArticleListVo;
 import com.sangeng.domain.vo.HotArticleVo;
 import com.sangeng.domain.vo.PageVo;
@@ -81,5 +82,23 @@ public class ArticeServiceImpl extends ServiceImpl<ArticleMapper, Article> imple
 
         PageVo pageVo = new PageVo(articleListVos, articlePage.getTotal());
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult getArticleDetail(Long id)
+    {
+        // 根据ID获取文章
+        Article article = getById(id);
+        // 补充数据 分类名称
+        Category category = categoryService.getById(article.getCategoryId());
+        if (category != null)
+        {
+            article.setCategoryName(category.getName());
+        }
+
+        // 封装成vo
+        ArticleDetailVo articleDetailVo = BeanCopyUtils.copyBean(article, ArticleDetailVo.class);
+
+        return ResponseResult.okResult(articleDetailVo);
     }
 }
