@@ -7,10 +7,14 @@ import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Comment;
 import com.sangeng.domain.vo.CommentVo;
 import com.sangeng.domain.vo.PageVo;
+import com.sangeng.enums.AppHttpCodeEnum;
+import com.sangeng.exception.SystemException;
 import com.sangeng.mapper.CommentMapper;
 import com.sangeng.service.CommentService;
 import com.sangeng.service.UserService;
 import com.sangeng.utils.BeanCopyUtils;
+import com.sangeng.utils.SecurityUtils;
+import io.jsonwebtoken.lang.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +62,20 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
 
         return ResponseResult.okResult(new PageVo(commentVos, commentPage.getTotal()));
+    }
+
+    @Override
+    public ResponseResult addComment(Comment comment)
+    {
+        // 内容不能为空
+        if (!Strings.hasText(comment.getContent()))
+        {
+            throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
+        }
+
+        // 其他信息自动填充
+        save(comment);
+        return ResponseResult.okResult();
     }
 
     /**
