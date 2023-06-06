@@ -13,7 +13,6 @@ import com.sangeng.mapper.CommentMapper;
 import com.sangeng.service.CommentService;
 import com.sangeng.service.UserService;
 import com.sangeng.utils.BeanCopyUtils;
-import com.sangeng.utils.SecurityUtils;
 import io.jsonwebtoken.lang.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private UserService userService;
 
     @Override
-    public ResponseResult commentList(Long articleId, Integer pageNum, Integer pageSize)
+    public ResponseResult commentList(String commentType, Long articleId, Integer pageNum, Integer pageSize)
     {
         // 查询对应文章的根评论
 
@@ -43,8 +42,10 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         LambdaQueryWrapper<Comment> lqw = new LambdaQueryWrapper<>();
 
         // 根评论 rootId为-1
-        lqw.eq(Comment::getArticleId, articleId);
+        lqw.eq(articleId != null,Comment::getArticleId, articleId);
         lqw.eq(Comment::getRootId, -1);
+        // 评论类型
+        lqw.eq(Comment::getType,commentType);
 
         // 分页查询
         Page<Comment> commentPage = new Page<>(pageNum, pageSize);
