@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings(value = { "unchecked", "rawtypes" })
+@SuppressWarnings(value = {"unchecked", "rawtypes"})
 @Component
 public class RedisCache
 {
@@ -20,7 +20,7 @@ public class RedisCache
     /**
      * 缓存基本的对象，Integer、String、实体类等
      *
-     * @param key 缓存的键值
+     * @param key   缓存的键值
      * @param value 缓存的值
      */
     public <T> void setCacheObject(final String key, final T value)
@@ -31,9 +31,9 @@ public class RedisCache
     /**
      * 缓存基本的对象，Integer、String、实体类等
      *
-     * @param key 缓存的键值
-     * @param value 缓存的值
-     * @param timeout 时间
+     * @param key      缓存的键值
+     * @param value    缓存的值
+     * @param timeout  时间
      * @param timeUnit 时间颗粒度
      */
     public <T> void setCacheObject(final String key, final T value, final Integer timeout, final TimeUnit timeUnit)
@@ -44,7 +44,7 @@ public class RedisCache
     /**
      * 设置有效时间
      *
-     * @param key Redis键
+     * @param key     Redis键
      * @param timeout 超时时间
      * @return true=设置成功；false=设置失败
      */
@@ -56,9 +56,9 @@ public class RedisCache
     /**
      * 设置有效时间
      *
-     * @param key Redis键
+     * @param key     Redis键
      * @param timeout 超时时间
-     * @param unit 时间单位
+     * @param unit    时间单位
      * @return true=设置成功；false=设置失败
      */
     public boolean expire(final String key, final long timeout, final TimeUnit unit)
@@ -102,7 +102,7 @@ public class RedisCache
     /**
      * 缓存List数据
      *
-     * @param key 缓存的键值
+     * @param key      缓存的键值
      * @param dataList 待缓存的List数据
      * @return 缓存的对象
      */
@@ -126,7 +126,7 @@ public class RedisCache
     /**
      * 缓存Set
      *
-     * @param key 缓存键值
+     * @param key     缓存键值
      * @param dataSet 缓存的数据
      * @return 缓存数据的对象
      */
@@ -160,7 +160,8 @@ public class RedisCache
      */
     public <T> void setCacheMap(final String key, final Map<String, T> dataMap)
     {
-        if (dataMap != null) {
+        if (dataMap != null)
+        {
             redisTemplate.opsForHash().putAll(key, dataMap);
         }
     }
@@ -179,8 +180,8 @@ public class RedisCache
     /**
      * 往Hash中存入数据
      *
-     * @param key Redis键
-     * @param hKey Hash键
+     * @param key   Redis键
+     * @param hKey  Hash键
      * @param value 值
      */
     public <T> void setCacheMapValue(final String key, final String hKey, final T value)
@@ -191,7 +192,7 @@ public class RedisCache
     /**
      * 获取Hash中的数据
      *
-     * @param key Redis键
+     * @param key  Redis键
      * @param hKey Hash键
      * @return Hash中的对象
      */
@@ -203,7 +204,7 @@ public class RedisCache
 
     /**
      * 删除Hash中的数据
-     * 
+     *
      * @param key
      * @param hkey
      */
@@ -216,7 +217,7 @@ public class RedisCache
     /**
      * 获取多个Hash中的数据
      *
-     * @param key Redis键
+     * @param key   Redis键
      * @param hKeys Hash键集合
      * @return Hash对象集合
      */
@@ -234,5 +235,16 @@ public class RedisCache
     public Collection<String> keys(final String pattern)
     {
         return redisTemplate.keys(pattern);
+    }
+
+    /**
+     * 递增
+     * @param key
+     * @param hKey
+     * @param v
+     */
+    public void incrementCacheMapValue(String key, String hKey, long v)
+    {
+        redisTemplate.boundHashOps(key).increment(hKey, v);
     }
 }

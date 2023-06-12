@@ -15,6 +15,7 @@ import com.sangeng.mapper.ArticleMapper;
 import com.sangeng.service.ArticleService;
 import com.sangeng.service.CategoryService;
 import com.sangeng.utils.BeanCopyUtils;
+import com.sangeng.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
@@ -29,6 +30,9 @@ public class ArticeServiceImpl extends ServiceImpl<ArticleMapper, Article> imple
     @Lazy
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private RedisCache redisCache;
 
     @Override
     public ResponseResult hotArticleList()
@@ -89,6 +93,10 @@ public class ArticeServiceImpl extends ServiceImpl<ArticleMapper, Article> imple
     {
         // 根据ID获取文章
         Article article = getById(id);
+        // 从redis中获取viewCount
+        Integer viewCount = redisCache.getCacheMapValue(SystemConstants.ARTICLE_VIEW_COUNT, String.valueOf(id));
+        article.setViewCount(viewCount.longValue());
+
         // 补充数据 分类名称
         Category category = categoryService.getById(article.getCategoryId());
         if (category != null)
@@ -100,5 +108,14 @@ public class ArticeServiceImpl extends ServiceImpl<ArticleMapper, Article> imple
         ArticleDetailVo articleDetailVo = BeanCopyUtils.copyBean(article, ArticleDetailVo.class);
 
         return ResponseResult.okResult(articleDetailVo);
+    }
+
+    @Override
+    public ResponseResult updateViewCount(Long id)
+    {
+        // 更新redis中对应id的浏览量
+        redisCache.incrementCacheMapValue(SystemConstants.ARTICLE_VIEW_COUNT,id.toString(),1);
+
+        return ResponseResult.okResult();
     }
 }
