@@ -22,4 +22,8 @@ public class SystemConstants
 
     // redis中的key
     public static final String ARTICLE_VIEW_COUNT = "article:viewCount";
+
+
+    public static final String MENU = "C";
+    public static final String BUTTON = "F";
 }
