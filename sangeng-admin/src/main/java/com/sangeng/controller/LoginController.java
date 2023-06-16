@@ -70,5 +70,9 @@ public class LoginController
 
         // 封装数据返回
         AdminUserInfoVo adminUserInfoVo = new AdminUserInfoVo(perms,roleKeyList,userInfoVo);
+
+        return ResponseResult.okResult(adminUserInfoVo);
     }
+
+
 }

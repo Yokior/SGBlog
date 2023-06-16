@@ -42,11 +42,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
         // 非管理员 查询用户权限信息
 
-        // TODO 查询非管理员权限信息
+        // 查询非管理员权限信息
 
-
-
-        return null;
+        return getBaseMapper().selectPermsByUserId(id);
     }
 }
 
