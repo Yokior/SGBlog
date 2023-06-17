@@ -29,8 +29,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         if (id == 1L)
         {
             LambdaQueryWrapper<Menu> lqw = new LambdaQueryWrapper<>();
-            lqw.in(Menu::getMenuType, SystemConstants.MENU,SystemConstants.BUTTON);
-            lqw.eq(Menu::getStatus,SystemConstants.STATUS_NORMAL);
+            lqw.in(Menu::getMenuType, SystemConstants.MENU, SystemConstants.BUTTON);
+            lqw.eq(Menu::getStatus, SystemConstants.STATUS_NORMAL);
             List<Menu> menuList = list(lqw);
 
             List<String> perms = menuList.stream()
@@ -45,6 +45,54 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         // 查询非管理员权限信息
 
         return getBaseMapper().selectPermsByUserId(id);
+    }
+
+    @Override
+    public List<Menu> selectRouterMenuTreeByUserId(Long userId)
+    {
+        List<Menu> menus = null;
+        // 判断是否是管理员
+        if (userId == 1L)
+        {
+            // 如果是 返回所有符合要求的menu
+            menus = getBaseMapper().selectAllRouterMenu();
+        }
+        else
+        {
+            // 否 返回对应的menu
+            menus = getBaseMapper().selectRouterMenuTreeByUserId(userId);
+        }
+
+        // 构建tree
+
+        List<Menu> menuTree = builderMenuTree(menus,0L);
+
+        return menuTree;
+    }
+
+    private List<Menu> builderMenuTree(List<Menu> menus, long parentId)
+    {
+        List<Menu> menuTree = menus.stream()
+                .filter(menu -> menu.getParentId().equals(parentId))
+                .map(menu -> menu.setChildren(getChildren(menu, menus)))
+                .collect(Collectors.toList());
+
+        return menuTree;
+    }
+
+    /**
+     * 获取存入参数的子menu
+     * @param menu
+     * @param menus
+     * @return
+     */
+    private List<Menu> getChildren(Menu menu, List<Menu> menus)
+    {
+        List<Menu> childrenList = menus.stream()
+                .filter(m -> m.getParentId().equals(menu.getId()))
+                .collect(Collectors.toList());
+
+        return childrenList;
     }
 }
 

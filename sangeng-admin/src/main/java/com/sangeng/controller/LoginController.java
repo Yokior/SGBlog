@@ -2,8 +2,10 @@ package com.sangeng.controller;
 
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.LoginUser;
+import com.sangeng.domain.entity.Menu;
 import com.sangeng.domain.entity.User;
 import com.sangeng.domain.vo.AdminUserInfoVo;
+import com.sangeng.domain.vo.RoutersVo;
 import com.sangeng.domain.vo.UserInfoVo;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.exception.SystemException;
@@ -75,4 +77,15 @@ public class LoginController
     }
 
 
+    @GetMapping("/getRouters")
+    public ResponseResult<RoutersVo> getRouters()
+    {
+        Long userId = SecurityUtils.getUserId();
+
+        // 查询menu 结果是tree的形式
+        List<Menu> menus = menuService.selectRouterMenuTreeByUserId(userId);
+
+        // 封装结果返回
+        return ResponseResult.okResult(menus);
+    }
 }
