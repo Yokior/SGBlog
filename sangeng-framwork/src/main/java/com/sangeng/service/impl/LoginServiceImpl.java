@@ -10,6 +10,7 @@ import com.sangeng.service.LoginService;
 import com.sangeng.utils.BeanCopyUtils;
 import com.sangeng.utils.JwtUtil;
 import com.sangeng.utils.RedisCache;
+import com.sangeng.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -63,12 +64,8 @@ public class LoginServiceImpl implements LoginService
     @Override
     public ResponseResult logout()
     {
-        // 获取token 解析userId
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-
-        // 转换为userId
-        Long userId = loginUser.getUser().getId();
+        // 获取userId
+        Long userId = SecurityUtils.getUserId();
 
         // 删除redis中数据
         redisCache.deleteObject("login:" + userId);
