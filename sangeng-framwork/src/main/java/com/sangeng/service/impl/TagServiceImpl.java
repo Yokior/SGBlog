@@ -7,6 +7,7 @@ import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Tag;
 import com.sangeng.domain.vo.PageVo;
 import com.sangeng.domain.vo.TagListDto;
+import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.mapper.TagMapper;
 import com.sangeng.service.TagService;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,20 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         PageVo pageVo = new PageVo(tagPage.getRecords(), tagPage.getTotal());
 
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult add(TagListDto tagListDto)
+    {
+        // 创建tag 添加数据
+        Tag tag = new Tag();
+        tag.setName(tagListDto.getName());
+        tag.setRemark(tagListDto.getRemark());
+
+        // 封装
+        save(tag);
+
+        return ResponseResult.okResult();
     }
 }
 

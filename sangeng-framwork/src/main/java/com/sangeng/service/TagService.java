@@ -15,4 +15,6 @@ import com.sangeng.domain.vo.TagListDto;
 public interface TagService extends IService<Tag> {
 
     ResponseResult pageTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto);
+
+    ResponseResult add(TagListDto tagListDto);
 }
