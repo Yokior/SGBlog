@@ -3,6 +3,7 @@ package com.sangeng.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Tag;
+import com.sangeng.domain.vo.TagInfoVo;
 import com.sangeng.domain.vo.TagListDto;
 
 
@@ -21,4 +22,6 @@ public interface TagService extends IService<Tag> {
     ResponseResult deleteTag(Long id);
 
     ResponseResult getTagInfo(Long id);
+
+    ResponseResult setTagInfo(TagInfoVo tagInfoVo);
 }

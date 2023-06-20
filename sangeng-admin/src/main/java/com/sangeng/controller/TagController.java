@@ -1,6 +1,7 @@
 package com.sangeng.controller;
 
 import com.sangeng.domain.ResponseResult;
+import com.sangeng.domain.vo.TagInfoVo;
 import com.sangeng.domain.vo.TagListDto;
 import com.sangeng.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +37,11 @@ public class TagController
     public ResponseResult getTagInfo(@PathVariable Long id)
     {
         return tagService.getTagInfo(id);
+    }
+
+    @PutMapping
+    public ResponseResult setTagInfo(@RequestBody TagInfoVo tagInfoVo)
+    {
+        return tagService.setTagInfo(tagInfoVo);
     }
 }

@@ -80,5 +80,25 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
         return ResponseResult.okResult(tagInfoVo);
     }
+
+    @Override
+    public ResponseResult setTagInfo(TagInfoVo tagInfoVo)
+    {
+        // 根据ID获取原始数据
+        Tag tag = getById(tagInfoVo.getId());
+        if (tag == null)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.TAG_NOT_EXIST);
+        }
+
+        // 更新指定字段
+        tag.setName(tagInfoVo.getName());
+        tag.setRemark(tagInfoVo.getRemark());
+
+        // 更新
+        updateById(tag);
+
+        return ResponseResult.okResult();
+    }
 }
 
