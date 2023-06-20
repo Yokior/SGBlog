@@ -53,5 +53,14 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
         return ResponseResult.okResult();
     }
+
+    @Override
+    public ResponseResult deleteTag(Long id)
+    {
+        // 根据id逻辑删除标签
+        removeById(id);
+
+        return ResponseResult.okResult();
+    }
 }
 
