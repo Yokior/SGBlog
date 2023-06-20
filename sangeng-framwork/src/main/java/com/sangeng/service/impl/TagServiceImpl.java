@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Tag;
 import com.sangeng.domain.vo.PageVo;
+import com.sangeng.domain.vo.TagInfoVo;
 import com.sangeng.domain.vo.TagListDto;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.mapper.TagMapper;
 import com.sangeng.service.TagService;
+import com.sangeng.utils.BeanCopyUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -61,6 +63,22 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         removeById(id);
 
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getTagInfo(Long id)
+    {
+        // 根据id获取Tag
+        Tag tag = getById(id);
+        if (tag == null)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.TAG_NOT_EXIST);
+        }
+
+        // 封装转换vo数据
+        TagInfoVo tagInfoVo = BeanCopyUtils.copyBean(tag, TagInfoVo.class);
+
+        return ResponseResult.okResult(tagInfoVo);
     }
 }
 
