@@ -8,6 +8,7 @@ import com.sangeng.domain.entity.Tag;
 import com.sangeng.domain.vo.PageVo;
 import com.sangeng.domain.vo.TagInfoVo;
 import com.sangeng.domain.vo.TagListDto;
+import com.sangeng.domain.vo.TagVo;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.mapper.TagMapper;
 import com.sangeng.service.TagService;
@@ -107,12 +108,15 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     public ResponseResult listAllTag()
     {
         // 获取所有tag
+        LambdaQueryWrapper<Tag> lqw = new LambdaQueryWrapper<>();
+        // 指定查询字段
+        lqw.select(Tag::getId,Tag::getName);
         List<Tag> tagList = list();
 
         // 封装vo返回
-        List<TagInfoVo> tagInfoVoList = BeanCopyUtils.copyBeanList(tagList, TagInfoVo.class);
+        List<TagVo> tagVoList = BeanCopyUtils.copyBeanList(tagList, TagVo.class);
 
-        return ResponseResult.okResult(tagInfoVoList);
+        return ResponseResult.okResult(tagVoList);
     }
 }
 

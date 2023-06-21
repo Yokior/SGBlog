@@ -64,7 +64,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     public ResponseResult listAllCategory()
     {
         // 查询所有分类信息
-        List<Category> categoryList = list();
+        LambdaQueryWrapper<Category> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Category::getStatus,SystemConstants.STATUS_NORMAL);
+        List<Category> categoryList = list(lqw);
 
         // 封装vo返回
         List<CategoryVo> categoryVoList = BeanCopyUtils.copyBeanList(categoryList, CategoryVo.class);
