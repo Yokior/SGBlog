@@ -59,5 +59,17 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
         return ResponseResult.okResult(categoryVos);
     }
+
+    @Override
+    public ResponseResult listAllCategory()
+    {
+        // 查询所有分类信息
+        List<Category> categoryList = list();
+
+        // 封装vo返回
+        List<CategoryVo> categoryVoList = BeanCopyUtils.copyBeanList(categoryList, CategoryVo.class);
+
+        return ResponseResult.okResult(categoryVoList);
+    }
 }
 
