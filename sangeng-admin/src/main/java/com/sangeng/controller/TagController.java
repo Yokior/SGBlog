@@ -44,4 +44,10 @@ public class TagController
     {
         return tagService.setTagInfo(tagInfoVo);
     }
+
+    @GetMapping("/listAllTag")
+    public ResponseResult listAllTag()
+    {
+        return tagService.listAllTag();
+    }
 }

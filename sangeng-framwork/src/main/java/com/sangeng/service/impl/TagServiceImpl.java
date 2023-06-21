@@ -15,6 +15,8 @@ import com.sangeng.utils.BeanCopyUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+
 /**
  * 标签(Tag)表服务实现类
  *
@@ -99,6 +101,18 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         updateById(tag);
 
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult listAllTag()
+    {
+        // 获取所有tag
+        List<Tag> tagList = list();
+
+        // 封装vo返回
+        List<TagInfoVo> tagInfoVoList = BeanCopyUtils.copyBeanList(tagList, TagInfoVo.class);
+
+        return ResponseResult.okResult(tagInfoVoList);
     }
 }
 

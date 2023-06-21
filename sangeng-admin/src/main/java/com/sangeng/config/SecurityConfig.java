@@ -46,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/user/login").anonymous()
                 // 需要token认证的接口
                 .antMatchers("/content/tag").authenticated()
+                .antMatchers("/content/category").authenticated()
                 // 除上面外的所有请求全部不需要认证即可访问
                 .anyRequest().permitAll();
 
