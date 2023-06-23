@@ -26,4 +26,7 @@ public class SystemConstants
 
     public static final String MENU = "C";
     public static final String BUTTON = "F";
+
+    public static final String NORMAL = "F";
+    public static final String ADMIN = "1";
 }
