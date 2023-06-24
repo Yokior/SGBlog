@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -139,5 +140,24 @@ public class ArticeServiceImpl extends ServiceImpl<ArticleMapper, Article> imple
         //添加 博客和标签的关联
         articleTagService.saveBatch(articleTags);
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult listArticle(int pageNum, int pageSize, String title, String summary)
+    {
+        // 根据title summary模糊查询
+        LambdaQueryWrapper<Article> lqw = new LambdaQueryWrapper<>();
+        lqw.like(StringUtils.hasText(title),Article::getTitle,title);
+        lqw.like(StringUtils.hasText(summary),Article::getSummary,summary);
+        lqw.eq(Article::getStatus,SystemConstants.STATUS_NORMAL);
+
+        // 封装page
+        Page<Article> articlePage = new Page<>(pageNum, pageSize);
+        page(articlePage,lqw);
+
+        // 转换vo
+        PageVo pageVo = new PageVo(articlePage.getRecords(), articlePage.getTotal());
+
+        return ResponseResult.okResult(pageVo);
     }
 }
