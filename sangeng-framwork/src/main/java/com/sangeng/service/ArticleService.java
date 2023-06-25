@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Article;
 import com.sangeng.domain.vo.AddArticleDto;
+import com.sangeng.domain.vo.ArticleInfoDto;
 
 public interface ArticleService extends IService<Article>
 {
@@ -18,4 +19,6 @@ public interface ArticleService extends IService<Article>
     ResponseResult add(AddArticleDto article);
 
     ResponseResult listArticle(int pageNum, int pageSize, String title, String summary);
+
+    ResponseResult getArticleInfo(Long id);
 }

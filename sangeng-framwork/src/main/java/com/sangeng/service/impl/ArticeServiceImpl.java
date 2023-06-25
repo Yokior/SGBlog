@@ -9,6 +9,7 @@ import com.sangeng.domain.entity.Article;
 import com.sangeng.domain.entity.ArticleTag;
 import com.sangeng.domain.entity.Category;
 import com.sangeng.domain.vo.*;
+import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.mapper.ArticleMapper;
 import com.sangeng.service.ArticleService;
 import com.sangeng.service.ArticleTagService;
@@ -159,5 +160,33 @@ public class ArticeServiceImpl extends ServiceImpl<ArticleMapper, Article> imple
         PageVo pageVo = new PageVo(articlePage.getRecords(), articlePage.getTotal());
 
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult getArticleInfo(Long id)
+    {
+        // 根据id查询Article
+        Article article = getById(id);
+
+        if(article == null)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.ARTICLE_NOT_EXIST);
+        }
+
+        // 查询tag 封装
+        LambdaQueryWrapper<ArticleTag> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(ArticleTag::getArticleId,id);
+        lqw.select(ArticleTag::getTagId);
+        List<ArticleTag> articleTagList = articleTagService.list(lqw);
+
+        // 提取tagId
+        List<Long> tagIdList = articleTagList.stream()
+                .map(ArticleTag::getTagId)
+                .collect(Collectors.toList());
+
+        ArticleInfoDto articleInfoDto = BeanCopyUtils.copyBean(article, ArticleInfoDto.class);
+        articleInfoDto.setTags(tagIdList);
+
+        return ResponseResult.okResult(articleInfoDto);
     }
 }
