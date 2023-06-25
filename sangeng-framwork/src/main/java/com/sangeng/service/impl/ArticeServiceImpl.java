@@ -189,4 +189,25 @@ public class ArticeServiceImpl extends ServiceImpl<ArticleMapper, Article> imple
 
         return ResponseResult.okResult(articleInfoDto);
     }
+
+    @Override
+    @Transactional
+    public ResponseResult updateArticle(ArticleInfoDto articleInfoDto)
+    {
+        // 先保存Article数据
+        Article article = BeanCopyUtils.copyBean(articleInfoDto, Article.class);
+        save(article);
+
+        // 保存Article—Tag关联数据
+        Long articleId = articleInfoDto.getId();
+        List<Long> tagIds = articleInfoDto.getTags();
+
+        List<ArticleTag> articleTagList = tagIds.stream()
+                .map(tagId -> new ArticleTag(articleId, tagId))
+                .collect(Collectors.toList());
+
+        articleTagService.saveBatch(articleTagList);
+
+        return ResponseResult.okResult();
+    }
 }

@@ -21,4 +21,6 @@ public interface ArticleService extends IService<Article>
     ResponseResult listArticle(int pageNum, int pageSize, String title, String summary);
 
     ResponseResult getArticleInfo(Long id);
+
+    ResponseResult updateArticle(ArticleInfoDto articleInfoDto);
 }

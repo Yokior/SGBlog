@@ -43,4 +43,11 @@ public class ArticleController
     }
 
 
+    @PutMapping
+    public ResponseResult updateArticle(@RequestBody ArticleInfoDto articleInfoDto)
+    {
+        return articleService.updateArticle(articleInfoDto);
+    }
+
+
 }
