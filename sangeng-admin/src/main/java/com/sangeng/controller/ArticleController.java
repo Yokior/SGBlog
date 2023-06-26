@@ -49,5 +49,17 @@ public class ArticleController
         return articleService.updateArticle(articleInfoDto);
     }
 
+    /**
+     * 删除菜单
+     * 如果有子菜单 删除失败
+     * @param menuId
+     * @return
+     */
+    @DeleteMapping("/{id}")
+    public ResponseResult deleteMenu(@PathVariable("id") Long menuId)
+    {
+        return articleService.deleteMenu(menuId);
+    }
+
 
 }

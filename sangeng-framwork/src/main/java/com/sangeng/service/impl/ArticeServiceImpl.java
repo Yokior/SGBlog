@@ -8,12 +8,14 @@ import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Article;
 import com.sangeng.domain.entity.ArticleTag;
 import com.sangeng.domain.entity.Category;
+import com.sangeng.domain.entity.Menu;
 import com.sangeng.domain.vo.*;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.mapper.ArticleMapper;
 import com.sangeng.service.ArticleService;
 import com.sangeng.service.ArticleTagService;
 import com.sangeng.service.CategoryService;
+import com.sangeng.service.MenuService;
 import com.sangeng.utils.BeanCopyUtils;
 import com.sangeng.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,9 @@ public class ArticeServiceImpl extends ServiceImpl<ArticleMapper, Article> imple
 
     @Autowired
     private ArticleTagService articleTagService;
+
+    @Autowired
+    private MenuService menuService;
 
     @Override
     public ResponseResult hotArticleList()
@@ -208,6 +213,30 @@ public class ArticeServiceImpl extends ServiceImpl<ArticleMapper, Article> imple
 
         articleTagService.saveBatch(articleTagList);
 
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult deleteMenu(Long menuId)
+    {
+        // 根据menuId查询菜单
+        Menu menu = menuService.getById(menuId);
+        if (menu == null)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.MENU_NOT_EXIST);
+        }
+
+        LambdaQueryWrapper<Menu> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Menu::getParentId,menu.getId());
+        int count = menuService.count(lqw);
+
+        // 查询是否有子菜单 有则删除失败
+        if (count > 0)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.MENU_HAS_SON);
+        }
+        // 没有子菜单 删除成功
+        menuService.removeById(menuId);
         return ResponseResult.okResult();
     }
 }

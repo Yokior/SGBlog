@@ -19,7 +19,9 @@ public enum AppHttpCodeEnum {
     NICKNAME_NOT_NULL(511,"昵称不能为空"),
     NICKNAME_EXIST(512,"昵称已存在"),
     TAG_NOT_EXIST(513,"标签不存在"),
-    ARTICLE_NOT_EXIST(514,"文章不存在");
+    ARTICLE_NOT_EXIST(514,"文章不存在"),
+    MENU_NOT_EXIST(515,"菜单不存在"),
+    MENU_HAS_SON(516,"菜单含有子菜单，删除失败");
     int code;
     String msg;
 
