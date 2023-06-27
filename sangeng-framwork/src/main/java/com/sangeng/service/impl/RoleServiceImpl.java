@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 角色信息表(Role)表服务实现类
@@ -69,6 +70,23 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         PageVo pageVo = new PageVo(roleVoList, rolePage.getTotal());
 
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult changeStatus(Map<String,String> roleMap)
+    {
+        // 根据角色Id获取角色
+        Role role = getById(roleMap.get("roleId"));
+        if (role == null)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.ROLE_NOT_EXIST);
+        }
+
+        // 修改角色信息
+        role.setStatus(roleMap.get("status"));
+
+        updateById(role);
+        return ResponseResult.okResult();
     }
 }
 
