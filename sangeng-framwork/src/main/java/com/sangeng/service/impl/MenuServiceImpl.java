@@ -3,9 +3,12 @@ package com.sangeng.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.constants.SystemConstants;
+import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Menu;
+import com.sangeng.domain.vo.MenuVo;
 import com.sangeng.mapper.MenuMapper;
 import com.sangeng.service.MenuService;
+import com.sangeng.utils.BeanCopyUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,6 +73,27 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return menuTree;
     }
 
+    @Override
+    public ResponseResult treeSelect()
+    {
+        // 获取菜单树接口
+        // 获取所有菜单
+        List<Menu> menuList = list();
+        List<MenuVo> menuVoList = BeanCopyUtils.copyBeanList(menuList, MenuVo.class);
+
+        menuVoList.stream()
+                .forEach(menuVo ->
+                {
+                    Menu menu = getById(menuVo.getId());
+                    menuVo.setLabel(menu.getMenuName());
+                });
+
+        // 构建树结构
+        List<MenuVo> menuTreeVo = builderMenuTreeVo(menuVoList, 0L);
+
+        return ResponseResult.okResult(menuTreeVo);
+    }
+
     private List<Menu> builderMenuTree(List<Menu> menus, long parentId)
     {
         List<Menu> menuTree = menus.stream()
@@ -79,6 +103,17 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
         return menuTree;
     }
+
+    private List<MenuVo> builderMenuTreeVo(List<MenuVo> menus, long parentId)
+    {
+        List<MenuVo> menuTree = menus.stream()
+                .filter(menu -> menu.getParentId().equals(parentId))
+                .map(menu -> menu.setChildren(getChildren(menu, menus)))
+                .collect(Collectors.toList());
+
+        return menuTree;
+    }
+
 
     /**
      * 获取存入参数的子menu
@@ -90,6 +125,16 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     {
         List<Menu> childrenList = menus.stream()
                 .filter(m -> m.getParentId().equals(menu.getId()))
+                .collect(Collectors.toList());
+
+        return childrenList;
+    }
+
+    private List<MenuVo> getChildren(MenuVo menu, List<MenuVo> menus)
+    {
+        List<MenuVo> childrenList = menus.stream()
+                .filter(m -> m.getParentId().equals(menu.getId()))
+                .map(m -> m.setChildren(getChildren(m, menus)))
                 .collect(Collectors.toList());
 
         return childrenList;
