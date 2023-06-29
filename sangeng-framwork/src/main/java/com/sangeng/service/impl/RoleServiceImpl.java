@@ -7,6 +7,7 @@ import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Role;
 import com.sangeng.domain.entity.RoleMenu;
 import com.sangeng.domain.vo.PageVo;
+import com.sangeng.domain.vo.RoleInfoVo;
 import com.sangeng.domain.vo.RoleVo;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.mapper.RoleMapper;
@@ -112,6 +113,22 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         roleMenuService.saveBatch(roleMenuList);
 
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getRoleInfo(Long id)
+    {
+        // 根据id获取role信息
+        Role role = getById(id);
+        if (role == null)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.ROLE_NOT_EXIST);
+        }
+
+        // 封装RoleInfoVo返回
+        RoleInfoVo roleInfoVo = BeanCopyUtils.copyBean(role, RoleInfoVo.class);
+
+        return ResponseResult.okResult(roleInfoVo);
     }
 }
 

@@ -1,6 +1,7 @@
 package com.sangeng.controller;
 
 import com.sangeng.domain.ResponseResult;
+import com.sangeng.domain.vo.RoleInfoVo;
 import com.sangeng.domain.vo.RoleVo;
 import com.sangeng.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,10 @@ public class RoleController
     public ResponseResult addRole(@RequestBody RoleVo roleVo)
     {
         return roleService.addRole(roleVo);
+    }
+    @GetMapping("/{id}")
+    public ResponseResult getRoleInfo(@PathVariable Long id)
+    {
+        return roleService.getRoleInfo(id);
     }
 }
