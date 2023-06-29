@@ -22,4 +22,6 @@ public interface RoleService extends IService<Role> {
     ResponseResult listRoles(int pageNum, int pageSize, String roleName, String status);
 
     ResponseResult changeStatus(Map<String,String> roleMap);
+
+    ResponseResult addRole(RoleVo roleVo);
 }

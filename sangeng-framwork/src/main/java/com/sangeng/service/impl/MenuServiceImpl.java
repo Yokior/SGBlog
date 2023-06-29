@@ -134,6 +134,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     {
         List<MenuVo> childrenList = menus.stream()
                 .filter(m -> m.getParentId().equals(menu.getId()))
+                // 多层子菜单
                 .map(m -> m.setChildren(getChildren(m, menus)))
                 .collect(Collectors.toList());
 

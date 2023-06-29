@@ -5,17 +5,21 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Role;
+import com.sangeng.domain.entity.RoleMenu;
 import com.sangeng.domain.vo.PageVo;
 import com.sangeng.domain.vo.RoleVo;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.mapper.RoleMapper;
+import com.sangeng.service.RoleMenuService;
 import com.sangeng.service.RoleService;
 import com.sangeng.utils.BeanCopyUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 角色信息表(Role)表服务实现类
@@ -26,6 +30,9 @@ import java.util.Map;
 @Service("roleService")
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService
 {
+
+    @Autowired
+    private RoleMenuService roleMenuService;
 
     @Override
     public List<String> selectRoleKeyByUserId(Long id)
@@ -86,6 +93,24 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         role.setStatus(roleMap.get("status"));
 
         updateById(role);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult addRole(RoleVo roleVo)
+    {
+        // 创建role对象 拷贝添加
+        Role role = BeanCopyUtils.copyBean(roleVo, Role.class);
+        save(role);
+
+        // role-menu关联表更新
+        Long roleId = role.getId();
+        List<RoleMenu> roleMenuList = roleVo.getMenuIds().stream()
+                .map(menuId -> new RoleMenu(roleId, menuId))
+                .collect(Collectors.toList());
+
+        roleMenuService.saveBatch(roleMenuList);
+
         return ResponseResult.okResult();
     }
 }

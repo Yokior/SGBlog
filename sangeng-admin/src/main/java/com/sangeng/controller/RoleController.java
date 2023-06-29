@@ -27,4 +27,10 @@ public class RoleController
     {
         return roleService.changeStatus(roleMap);
     }
+
+    @PostMapping
+    public ResponseResult addRole(@RequestBody RoleVo roleVo)
+    {
+        return roleService.addRole(roleVo);
+    }
 }
