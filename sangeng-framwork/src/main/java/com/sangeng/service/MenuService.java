@@ -3,6 +3,7 @@ package com.sangeng.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Menu;
+import com.sangeng.domain.vo.MenuVo;
 
 import java.util.List;
 
@@ -19,5 +20,7 @@ public interface MenuService extends IService<Menu> {
 
     List<Menu> selectRouterMenuTreeByUserId(Long userId);
 
-    ResponseResult treeSelect();
+    List<MenuVo> treeSelect();
+
+    ResponseResult roleMenuTreeselect(Long id);
 }

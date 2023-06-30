@@ -13,7 +13,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class MenuVo
 {
-    private List<MenuVo> children = null;
+    private List<MenuVo> children;
 
     private Long id;
 
