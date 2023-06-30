@@ -165,5 +165,22 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
         return ResponseResult.okResult();
     }
+
+    @Override
+    public ResponseResult deleteRole(Long id)
+    {
+        // 查询角色是否存在
+        Role role = getById(id);
+        if (role == null)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.ROLE_NOT_EXIST);
+        }
+
+        // 逻辑删除角色
+        removeById(id);
+
+        return ResponseResult.okResult();
+    }
+
 }
 

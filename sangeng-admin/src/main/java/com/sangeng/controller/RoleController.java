@@ -46,4 +46,10 @@ public class RoleController
     {
         return roleService.updateRoleInfo(roleVo);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseResult deleteRole(@PathVariable Long id)
+    {
+        return roleService.deleteRole(id);
+    }
 }
