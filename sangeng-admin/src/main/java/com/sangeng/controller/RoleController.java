@@ -34,9 +34,16 @@ public class RoleController
     {
         return roleService.addRole(roleVo);
     }
+
     @GetMapping("/{id}")
     public ResponseResult getRoleInfo(@PathVariable Long id)
     {
         return roleService.getRoleInfo(id);
+    }
+
+    @PutMapping
+    public ResponseResult updateRoleInfo(@RequestBody RoleVo roleVo)
+    {
+        return roleService.updateRoleInfo(roleVo);
     }
 }

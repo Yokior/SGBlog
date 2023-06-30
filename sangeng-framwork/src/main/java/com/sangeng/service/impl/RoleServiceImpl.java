@@ -130,5 +130,40 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
         return ResponseResult.okResult(roleInfoVo);
     }
+
+    @Override
+    public ResponseResult updateRoleInfo(RoleVo roleVo)
+    {
+        // 获取role对象 更新role表
+        Long roleId = roleVo.getId();
+
+        Role role = getById(roleId);
+        if (role == null)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.ROLE_NOT_EXIST);
+        }
+
+        role.setRoleKey(roleVo.getRoleKey());
+        role.setRoleName(roleVo.getRoleName());
+        role.setRoleSort(roleVo.getRoleSort());
+        role.setStatus(roleVo.getStatus());
+        role.setRemark(roleVo.getRemark());
+
+        updateById(role);
+
+        // 更新role-menu关联表数据
+        List<RoleMenu> roleMenuList = roleVo.getMenuIds().stream()
+                .map(menuId -> new RoleMenu(roleId, menuId))
+                .collect(Collectors.toList());
+
+        // 注意 该表有两个主键 所以先删除再插入
+        LambdaQueryWrapper<RoleMenu> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(RoleMenu::getRoleId,roleId);
+        roleMenuService.remove(lqw);
+
+        roleMenuService.saveBatch(roleMenuList);
+
+        return ResponseResult.okResult();
+    }
 }
 
