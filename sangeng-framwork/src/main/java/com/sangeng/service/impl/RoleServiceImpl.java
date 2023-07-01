@@ -3,6 +3,7 @@ package com.sangeng.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sangeng.constants.SystemConstants;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Role;
 import com.sangeng.domain.entity.RoleMenu;
@@ -180,6 +181,18 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         removeById(id);
 
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult listAllRole()
+    {
+        // 查询所有状态状态正常的角色
+        LambdaQueryWrapper<Role> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Role::getStatus, SystemConstants.STATUS_NORMAL);
+
+        List<Role> roleList = list(lqw);
+
+        return ResponseResult.okResult(roleList);
     }
 
 }
