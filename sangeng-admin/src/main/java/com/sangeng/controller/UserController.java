@@ -1,11 +1,10 @@
 package com.sangeng.controller;
 
 import com.sangeng.domain.ResponseResult;
+import com.sangeng.domain.vo.SysUserVo;
 import com.sangeng.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/system/user")
@@ -19,5 +18,11 @@ public class UserController
     public ResponseResult listSysUserInfo(Integer pageNum, Integer pageSize, String userName, String phonenumber, String status)
     {
         return userService.listSysUserInfo(pageNum, pageSize, userName, phonenumber, status);
+    }
+
+    @PostMapping
+    public ResponseResult addSysUser(@RequestBody SysUserVo sysUserVo)
+    {
+        return userService.addSysUser(sysUserVo);
     }
 }

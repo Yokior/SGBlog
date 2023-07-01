@@ -3,6 +3,7 @@ package com.sangeng.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.User;
+import com.sangeng.domain.vo.SysUserVo;
 
 
 /**
@@ -20,4 +21,6 @@ public interface UserService extends IService<User> {
     ResponseResult register(User user);
 
     ResponseResult listSysUserInfo(Integer pageNum, Integer pageSize, String userName, String phonenumber, String status);
+
+    ResponseResult addSysUser(SysUserVo sysUserVo);
 }
