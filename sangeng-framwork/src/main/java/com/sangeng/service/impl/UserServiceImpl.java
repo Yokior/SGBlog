@@ -1,9 +1,12 @@
 package com.sangeng.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.User;
+import com.sangeng.domain.vo.PageVo;
+import com.sangeng.domain.vo.SysUserInfoVo;
 import com.sangeng.domain.vo.UserInfoVo;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.exception.SystemException;
@@ -15,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 /**
  * 用户表(User)表服务实现类
@@ -89,6 +94,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 存入数据库
         save(user);
         return ResponseResult.okResult(user);
+    }
+
+    @Override
+    public ResponseResult listSysUserInfo(Integer pageNum, Integer pageSize, String userName, String phonenumber, String status)
+    {
+        LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
+        // 用户名模糊搜索
+        lqw.like(StringUtils.hasText(userName),User::getUserName,userName);
+        // 手机号搜索
+        lqw.eq(StringUtils.hasText(phonenumber),User::getPhonenumber,phonenumber);
+        // 状态搜索
+        lqw.eq(StringUtils.hasText(status),User::getStatus,status);
+
+        // 分页
+        Page<User> userPage = new Page<>(pageNum, pageSize);
+        page(userPage,lqw);
+
+        // 转换为vo返回
+        List<SysUserInfoVo> sysUserInfoVoList = BeanCopyUtils.copyBeanList(userPage.getRecords(), SysUserInfoVo.class);
+
+        PageVo pageVo = new PageVo(sysUserInfoVoList, userPage.getTotal());
+
+        return ResponseResult.okResult(pageVo);
     }
 
     private boolean nickNameExist(String nickName)
