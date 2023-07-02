@@ -1,6 +1,7 @@
 package com.sangeng.controller;
 
 import com.sangeng.domain.ResponseResult;
+import com.sangeng.domain.vo.SysUserUpdate;
 import com.sangeng.domain.vo.SysUserVo;
 import com.sangeng.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +37,11 @@ public class UserController
     public ResponseResult getSysUserInfo(@PathVariable Long id)
     {
         return userService.getSysUserInfo(id);
+    }
+
+    @PutMapping
+    public ResponseResult updateSysUser(@RequestBody SysUserUpdate sysUserUpdate)
+    {
+        return userService.updateSysUser(sysUserUpdate);
     }
 }

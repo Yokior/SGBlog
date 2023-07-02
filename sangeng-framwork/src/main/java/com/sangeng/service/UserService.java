@@ -3,6 +3,7 @@ package com.sangeng.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.User;
+import com.sangeng.domain.vo.SysUserUpdate;
 import com.sangeng.domain.vo.SysUserVo;
 
 
@@ -27,4 +28,6 @@ public interface UserService extends IService<User> {
     ResponseResult deleteSysUser(Long id);
 
     ResponseResult getSysUserInfo(Long id);
+
+    ResponseResult updateSysUser(SysUserUpdate sysUserUpdate);
 }

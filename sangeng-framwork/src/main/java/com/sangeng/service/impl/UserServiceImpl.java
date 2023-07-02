@@ -241,6 +241,41 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return ResponseResult.okResult(sysUserRole);
     }
 
+    @Override
+    @Transactional
+    public ResponseResult updateSysUser(SysUserUpdate sysUserUpdate)
+    {
+        // 根据id获取用户
+        Long userId = sysUserUpdate.getId();
+        User user = getById(userId);
+        if (user == null)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.USER_NOT_EXIST);
+        }
+
+        // 更新信息
+        user.setUserName(sysUserUpdate.getUserName());
+        user.setNickName(sysUserUpdate.getNickName());
+        user.setEmail(sysUserUpdate.getEmail());
+        user.setSex(sysUserUpdate.getSex());
+        user.setStatus(sysUserUpdate.getStatus());
+
+        updateById(user);
+
+        // 更新user-role关联信息
+        List<UserRole> userRoleList = sysUserUpdate.getRoleIds().stream()
+                .map(roleId -> new UserRole(userId, roleId))
+                .collect(Collectors.toList());
+
+        // 关联表先删除再更新
+        LambdaQueryWrapper<UserRole> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(UserRole::getUserId,userId);
+        userRoleService.remove(lqw);
+        userRoleService.saveBatch(userRoleList);
+
+        return ResponseResult.okResult();
+    }
+
     private boolean nickNameExist(String nickName)
     {
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
