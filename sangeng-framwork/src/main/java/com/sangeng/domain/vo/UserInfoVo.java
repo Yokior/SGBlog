@@ -11,6 +11,10 @@ public class UserInfoVo {
      */
     private Long id;
 
+    private String userName;
+
+    private String status;
+
     /**
      * 昵称
      */

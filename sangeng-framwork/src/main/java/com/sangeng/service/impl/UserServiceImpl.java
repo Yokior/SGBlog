@@ -4,12 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.domain.ResponseResult;
+import com.sangeng.domain.entity.Role;
 import com.sangeng.domain.entity.User;
 import com.sangeng.domain.entity.UserRole;
-import com.sangeng.domain.vo.PageVo;
-import com.sangeng.domain.vo.SysUserInfoVo;
-import com.sangeng.domain.vo.SysUserVo;
-import com.sangeng.domain.vo.UserInfoVo;
+import com.sangeng.domain.vo.*;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.exception.SystemException;
 import com.sangeng.mapper.UserMapper;
@@ -42,6 +40,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     private UserRoleService userRoleService;
+
+    @Autowired
+    private RoleService roleService;
 
     @Override
     public ResponseResult userInfo()
@@ -209,6 +210,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         removeById(id);
 
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getSysUserInfo(Long id)
+    {
+        // 获取user
+        User user = getById(id);
+        if (user == null)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.USER_NOT_EXIST);
+        }
+        UserInfoVo userInfoVo = BeanCopyUtils.copyBean(user, UserInfoVo.class);
+
+        // 获取对应的roleId
+        LambdaQueryWrapper<UserRole> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(UserRole::getUserId,id);
+
+        List<Long> roleIds = userRoleService.list(lqw).stream()
+                .map(UserRole::getRoleId)
+                .collect(Collectors.toList());
+
+        // 获取全部的roleId
+        List<Role> roles = roleService.list();
+
+        // 封装信息
+        // 创建SysUserRole对象
+        SysUserRole sysUserRole = new SysUserRole(roleIds,roles,userInfoVo);
+
+        return ResponseResult.okResult(sysUserRole);
     }
 
     private boolean nickNameExist(String nickName)

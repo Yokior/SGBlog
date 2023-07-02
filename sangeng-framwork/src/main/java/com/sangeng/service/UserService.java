@@ -25,4 +25,6 @@ public interface UserService extends IService<User> {
     ResponseResult addSysUser(SysUserVo sysUserVo);
 
     ResponseResult deleteSysUser(Long id);
+
+    ResponseResult getSysUserInfo(Long id);
 }

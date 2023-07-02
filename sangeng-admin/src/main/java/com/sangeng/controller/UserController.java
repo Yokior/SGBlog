@@ -31,4 +31,10 @@ public class UserController
     {
         return userService.deleteSysUser(id);
     }
+
+    @GetMapping("/{id}")
+    public ResponseResult getSysUserInfo(@PathVariable Long id)
+    {
+        return userService.getSysUserInfo(id);
+    }
 }
