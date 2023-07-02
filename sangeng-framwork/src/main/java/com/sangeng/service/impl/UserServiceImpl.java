@@ -191,6 +191,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public ResponseResult deleteSysUser(Long id)
     {
+        // 不可删除当前操作的用户
+        Long userId = SecurityUtils.getUserId();
+        if (id == userId)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.USER_DELETE_ERROR);
+        }
+
         // 查询用户是否存在
         User user = getById(id);
         if (user == null)
