@@ -22,7 +22,8 @@ public enum AppHttpCodeEnum {
     ARTICLE_NOT_EXIST(514,"文章不存在"),
     MENU_NOT_EXIST(515,"菜单不存在"),
     MENU_HAS_SON(516,"菜单含有子菜单，删除失败"),
-    ROLE_NOT_EXIST(517,"角色不存在");
+    ROLE_NOT_EXIST(517,"角色不存在"),
+    USER_NOT_EXIST(518,"用户不存在");
     int code;
     String msg;
 

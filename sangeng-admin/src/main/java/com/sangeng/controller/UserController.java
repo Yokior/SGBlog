@@ -25,4 +25,10 @@ public class UserController
     {
         return userService.addSysUser(sysUserVo);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseResult deleteSysUser(@PathVariable Long id)
+    {
+        return userService.deleteSysUser(id);
+    }
 }

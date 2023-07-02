@@ -23,4 +23,6 @@ public interface UserService extends IService<User> {
     ResponseResult listSysUserInfo(Integer pageNum, Integer pageSize, String userName, String phonenumber, String status);
 
     ResponseResult addSysUser(SysUserVo sysUserVo);
+
+    ResponseResult deleteSysUser(Long id);
 }

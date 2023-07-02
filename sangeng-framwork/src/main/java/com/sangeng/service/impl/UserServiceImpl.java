@@ -188,6 +188,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return ResponseResult.okResult();
     }
 
+    @Override
+    public ResponseResult deleteSysUser(Long id)
+    {
+        // 查询用户是否存在
+        User user = getById(id);
+        if (user == null)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.USER_NOT_EXIST);
+        }
+
+        // 根据id逻辑删除用户
+        removeById(id);
+
+        return ResponseResult.okResult();
+    }
+
     private boolean nickNameExist(String nickName)
     {
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
