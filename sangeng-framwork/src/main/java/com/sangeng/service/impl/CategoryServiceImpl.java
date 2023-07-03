@@ -1,18 +1,21 @@
 package com.sangeng.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.constants.SystemConstants;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Article;
 import com.sangeng.domain.entity.Category;
 import com.sangeng.domain.vo.CategoryVo;
+import com.sangeng.domain.vo.PageVo;
 import com.sangeng.mapper.CategoryMapper;
 import com.sangeng.service.ArticleService;
 import com.sangeng.service.CategoryService;
 import com.sangeng.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -65,13 +68,33 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     {
         // 查询所有分类信息
         LambdaQueryWrapper<Category> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(Category::getStatus,SystemConstants.STATUS_NORMAL);
+        lqw.eq(Category::getStatus, SystemConstants.STATUS_NORMAL);
         List<Category> categoryList = list(lqw);
 
         // 封装vo返回
         List<CategoryVo> categoryVoList = BeanCopyUtils.copyBeanList(categoryList, CategoryVo.class);
 
         return ResponseResult.okResult(categoryVoList);
+    }
+
+    @Override
+    public ResponseResult listCategory(Integer pageNum, Integer pageSize, String name, String status)
+    {
+        LambdaQueryWrapper<Category> lqw = new LambdaQueryWrapper<>();
+        lqw.select(Category::getId, Category::getDescription, Category::getStatus, Category::getName);
+        // 根据name模糊查询
+        lqw.like(StringUtils.hasText(name), Category::getName, name);
+        // 根据status查询
+        lqw.eq(StringUtils.hasText(status), Category::getStatus, status);
+
+        // 封装page
+        Page<Category> categoryPage = new Page<>(pageNum, pageSize);
+        page(categoryPage, lqw);
+
+        // 封装PageVo
+        PageVo pageVo = new PageVo(categoryPage.getRecords(), categoryPage.getTotal());
+
+        return ResponseResult.okResult(pageVo);
     }
 }
 

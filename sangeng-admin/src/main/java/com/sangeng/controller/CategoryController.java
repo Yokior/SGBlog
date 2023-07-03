@@ -60,6 +60,11 @@ public class CategoryController
 
     }
 
+    @GetMapping("/list")
+    public ResponseResult listCategory(Integer pageNum,Integer pageSize,String name,String status)
+    {
+        return categoryService.listCategory(pageNum,pageSize,name,status);
+    }
 
 
 }
