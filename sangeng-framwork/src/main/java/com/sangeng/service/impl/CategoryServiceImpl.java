@@ -96,5 +96,16 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
         return ResponseResult.okResult(pageVo);
     }
+
+    @Override
+    public ResponseResult addCategory(CategoryVo categoryVo)
+    {
+        // 创建Category对象
+        Category category = BeanCopyUtils.copyBean(categoryVo, Category.class);
+
+        save(category);
+
+        return ResponseResult.okResult();
+    }
 }
 

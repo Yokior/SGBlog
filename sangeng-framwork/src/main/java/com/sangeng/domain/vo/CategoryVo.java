@@ -14,4 +14,6 @@ public class CategoryVo
     private String name;
 
     private String description;
+
+    private String status;
 }
