@@ -9,6 +9,7 @@ import com.sangeng.domain.entity.Article;
 import com.sangeng.domain.entity.Category;
 import com.sangeng.domain.vo.CategoryVo;
 import com.sangeng.domain.vo.PageVo;
+import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.mapper.CategoryMapper;
 import com.sangeng.service.ArticleService;
 import com.sangeng.service.CategoryService;
@@ -104,6 +105,26 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         Category category = BeanCopyUtils.copyBean(categoryVo, Category.class);
 
         save(category);
+
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult updateCategory(CategoryVo categoryVo)
+    {
+        // 根据id获取category
+        Category category = getById(categoryVo.getId());
+        if (category == null)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.CATEGORY_NOT_EXIST);
+        }
+
+        // 修改属性
+        category.setName(categoryVo.getName());
+        category.setDescription(categoryVo.getDescription());
+        category.setStatus(categoryVo.getStatus());
+
+        updateById(category);
 
         return ResponseResult.okResult();
     }

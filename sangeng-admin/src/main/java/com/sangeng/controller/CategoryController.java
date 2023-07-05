@@ -71,5 +71,11 @@ public class CategoryController
         return categoryService.addCategory(categoryVo);
     }
 
+    @PutMapping
+    public ResponseResult updateCategory(@RequestBody CategoryVo categoryVo)
+    {
+        return categoryService.updateCategory(categoryVo);
+    }
+
 
 }
