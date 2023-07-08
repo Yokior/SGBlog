@@ -59,5 +59,17 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
 
         return ResponseResult.okResult(pageVo);
     }
+
+    @Override
+    public ResponseResult addLink(LinkVo linkVo)
+    {
+        // 拷贝Link对象
+        Link link = BeanCopyUtils.copyBean(linkVo, Link.class);
+
+        // 新增Link
+        save(link);
+
+        return ResponseResult.okResult();
+    }
 }
 
