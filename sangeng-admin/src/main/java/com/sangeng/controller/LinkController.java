@@ -32,4 +32,10 @@ public class LinkController
         return linkService.getLink(id);
     }
 
+    @PutMapping
+    public ResponseResult updateLink(@RequestBody LinkVo linkVo)
+    {
+        return linkService.updateLink(linkVo);
+    }
+
 }

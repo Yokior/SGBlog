@@ -86,5 +86,28 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
 
         return ResponseResult.okResult(linkVo);
     }
+
+    @Override
+    public ResponseResult updateLink(LinkVo linkVo)
+    {
+        Long id = linkVo.getId();
+        // 根据id获取link
+        Link link = getById(id);
+        if (link == null)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.LINK_NOT_EXIST);
+        }
+
+        // 修改指定信息
+        link.setLogo(linkVo.getLogo());
+        link.setAddress(linkVo.getAddress());
+        link.setDescription(linkVo.getDescription());
+        link.setName(linkVo.getName());
+        link.setStatus(linkVo.getStatus());
+
+        updateById(link);
+
+        return ResponseResult.okResult();
+    }
 }
 
