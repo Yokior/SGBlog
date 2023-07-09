@@ -26,4 +26,10 @@ public class LinkController
         return linkService.addLink(linkVo);
     }
 
+    @GetMapping("/{id}")
+    public ResponseResult getLink(@PathVariable Long id)
+    {
+        return linkService.getLink(id);
+    }
+
 }

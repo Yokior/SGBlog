@@ -8,6 +8,7 @@ import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Link;
 import com.sangeng.domain.vo.LinkVo;
 import com.sangeng.domain.vo.PageVo;
+import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.mapper.LinkMapper;
 import com.sangeng.service.LinkService;
 import com.sangeng.utils.BeanCopyUtils;
@@ -70,6 +71,20 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
         save(link);
 
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getLink(Long id)
+    {
+        Link link = getById(id);
+        if (link == null)
+        {
+            return ResponseResult.errorResult(AppHttpCodeEnum.LINK_NOT_EXIST);
+        }
+
+        LinkVo linkVo = BeanCopyUtils.copyBean(link, LinkVo.class);
+
+        return ResponseResult.okResult(linkVo);
     }
 }
 

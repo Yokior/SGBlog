@@ -25,7 +25,8 @@ public enum AppHttpCodeEnum {
     ROLE_NOT_EXIST(517,"角色不存在"),
     USER_NOT_EXIST(518,"用户不存在"),
     USER_DELETE_ERROR(519,"不可以删除当前操作的用户"),
-    CATEGORY_NOT_EXIST(520,"分类不存在");
+    CATEGORY_NOT_EXIST(520,"分类不存在"),
+    LINK_NOT_EXIST(521,"友链不存在");
     int code;
     String msg;
 

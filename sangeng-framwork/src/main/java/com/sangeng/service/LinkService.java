@@ -20,4 +20,6 @@ public interface LinkService extends IService<Link> {
     ResponseResult listLink(Integer pageNum, Integer pageSize, String name, String status);
 
     ResponseResult addLink(LinkVo linkVo);
+
+    ResponseResult getLink(Long id);
 }
